@@ -1,0 +1,69 @@
+---
+- name: create deployment directory
+  file:
+    path: "{{ DEPLOYMENT_ROOT }}/proxy"
+    state: directory
+    mode: 0755
+
+- name: copy docker-compose.yml
+  copy:
+    src: docker-compose.yml
+    dest: "{{ DEPLOYMENT_ROOT }}/proxy/docker-compose.yml"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: generate .env
+  blockinfile:
+    path: "{{ DEPLOYMENT_ROOT }}/proxy/.env"
+    create: yes
+    owner: root
+    group: root
+    mode: 0644
+    block: |
+      DEPLOYMENT_ROOT={{ DEPLOYMENT_ROOT }}
+
+      NGINX_TAG={{ NGINX_TAG }}
+
+- name: create nginx directory
+  file:
+    path: "{{ DEPLOYMENT_ROOT }}/proxy/nginx"
+    state: directory
+    mode: 0755
+
+- name: create nginx conf directory
+  file:
+    path: "{{ DEPLOYMENT_ROOT }}/proxy/nginx/conf"
+    state: directory
+    mode: 0755
+
+- name: copy nginx.conf
+  copy:
+    src: nginx/conf/nginx.conf
+    dest: "{{ DEPLOYMENT_ROOT }}/proxy/nginx/conf/nginx.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: create nginx html directory
+  file:
+    path: "{{ DEPLOYMENT_ROOT }}/proxy/nginx/html"
+    state: directory
+    mode: 0755
+
+- name: copy index.html
+  copy:
+    src: nginx/html/index.html
+    dest: "{{ DEPLOYMENT_ROOT }}/proxy/nginx/html/index.html"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: start docker
+  #docker_service:
+  #  project_src: "{{ DEPLOYMENT_ROOT }}/proxy"
+  #  state: present
+  command: docker-compose up -d
+  args:
+    chdir: "{{ DEPLOYMENT_ROOT }}/proxy"
+    
