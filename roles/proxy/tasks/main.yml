@@ -63,7 +63,7 @@
   #docker_service:
   #  project_src: "{{ DEPLOYMENT_ROOT }}/proxy"
   #  state: present
-  command: docker-compose up -d
+  command: /usr/local/bin/docker-compose up -d
   args:
     chdir: "{{ DEPLOYMENT_ROOT }}/proxy"
     
