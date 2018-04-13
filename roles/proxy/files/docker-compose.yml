@@ -8,5 +8,5 @@ services:
     volumes:
       - "${DEPLOYMENT_ROOT}/proxy/nginx/conf/nginx.conf:/etc/nginx/nginx.conf:z"
       - "${DEPLOYMENT_ROOT}/proxy/nginx/html:/usr/share/nginx/html:z"
-      - "/etc/letsencrypt:/etc/certs"
+      - "/etc/letsencrypt:/etc/certs:z"
     restart: always
