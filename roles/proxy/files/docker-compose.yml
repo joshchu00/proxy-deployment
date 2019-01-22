@@ -6,6 +6,8 @@ services:
       - 80:80
       - 443:443
       - 28443:28443
+      - 50443:50443
+      - 58443:58443
     volumes:
       - "${DEPLOYMENT_ROOT}/nginx/conf/nginx.conf:/etc/nginx/nginx.conf:z"
       - "${DEPLOYMENT_ROOT}/nginx/html:/usr/share/nginx/html:z"
