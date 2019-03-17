@@ -1,66 +1,70 @@
 ---
 - name: create deployment directory
   file:
-    path: '{{ DEPLOYMENT_ROOT }}'
+    path: '{{ deployment_root }}'
     state: directory
     mode: 0755
 
 - name: copy docker-compose.yml
   copy:
     src: docker-compose.yml
-    dest: '{{ DEPLOYMENT_ROOT }}/docker-compose.yml'
+    dest: '{{ deployment_root }}/docker-compose.yml'
     owner: root
     group: root
     mode: 0644
 
 - name: generate .env
   blockinfile:
-    path: '{{ DEPLOYMENT_ROOT }}/.env'
+    path: '{{ deployment_root }}/.env'
     create: yes
     owner: root
     group: root
     mode: 0644
     block: |
-      DEPLOYMENT_ROOT={{ DEPLOYMENT_ROOT }}
-
-      NGINX_IMAGE={{ NGINX_IMAGE }}
+      DEPLOYMENT_ROOT={{ deployment_root }}
+      NGINX_IMAGE={{ nginx_image }}
 
 - name: create nginx directory
   file:
-    path: '{{ DEPLOYMENT_ROOT }}/nginx'
+    path: '{{ deployment_root }}/nginx'
     state: directory
     mode: 0755
 
 - name: create nginx conf directory
   file:
-    path: '{{ DEPLOYMENT_ROOT }}/nginx/conf'
+    path: '{{ deployment_root }}/nginx/conf'
     state: directory
     mode: 0755
 
 - name: copy nginx.conf
   copy:
     src: nginx/conf/nginx.conf
-    dest: '{{ DEPLOYMENT_ROOT }}/nginx/conf/nginx.conf'
+    dest: '{{ deployment_root }}/nginx/conf/nginx.conf'
     owner: root
     group: root
     mode: 0644
 
 - name: create nginx html directory
   file:
-    path: '{{ DEPLOYMENT_ROOT }}/nginx/html'
+    path: '{{ deployment_root }}/nginx/html'
     state: directory
     mode: 0755
 
 - name: copy index.html
   copy:
     src: nginx/html/index.html
-    dest: '{{ DEPLOYMENT_ROOT }}/nginx/html/index.html'
+    dest: '{{ deployment_root }}/nginx/html/index.html'
     owner: root
     group: root
     mode: 0644
 
+- name: pull docker images
+  command: /usr/local/bin/docker-compose pull
+  args:
+    chdir: '{{ deployment_root }}'
+
 - name: start docker
   command: /usr/local/bin/docker-compose up -d
   args:
-    chdir: '{{ DEPLOYMENT_ROOT }}'
+    chdir: '{{ deployment_root }}'
     
